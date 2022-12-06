@@ -1,0 +1,13 @@
+version: "3"
+
+services: 
+  aws-ddns: 
+    image: taegost/aws-ddns-docker:latest
+    restart: unless-stopped
+    environment:
+      AWS_ACCESS_KEY: AK6fakekey4EE
+      AWS_SECRET: SuperDuperSecret
+      DOMAIN: example.com
+      DNS_TTL: 300
+      AWS_ZONE_ID: Z0000fakezone000
+      RECHECK_SECS: 900
