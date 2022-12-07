@@ -1,14 +1,9 @@
-FROM ubuntu:20.04
+FROM phusion/baseimage:jammy-1.0.1
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 RUN apt-get -y install git awscli dnsutils curl
 
-WORKDIR /app
-
-RUN git clone https://github.com/famzah/aws-dyndns.git
-RUN chmod +x aws-dyndns/aws-dyndns
-
-COPY ./bootstrap.sh /app
-RUN chmod 755 bootstrap.sh
-CMD ["/app/bootstrap.sh"]
+RUN mkdir /etc/service/ddns
+COPY ./bootstrap.sh /etc/service/ddns/run
+RUN chmod 755 /etc/service/ddns/run
