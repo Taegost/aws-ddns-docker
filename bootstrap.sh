@@ -1,27 +1,27 @@
 #!/bin/bash
 
-if [ ! -f "$AWS_ACCESS_KEY" ]; then
+if [ -z "$AWS_ACCESS_KEY" ]; then
   echo 'You MUST specify the AWS_ACCESS_KEY'
   exit 1
 fi
-if [ ! -f "$AWS_SECRET" ]; then
+if [ -z "$AWS_SECRET" ]; then
   echo 'You MUST specify the AWS_SECRET'
   exit 1
 fi
-if [ ! -f "$AWS_ZONE_ID" ]; then
+if [ -z "$AWS_ZONE_ID" ]; then
   echo 'You MUST specify the AWS_ZONE_ID'
   exit 1
 fi
-if [ ! -f "$DOMAIN" ]; then
+if [ -z "$DOMAIN" ]; then
   echo 'You MUST specify the DOMAIN'
   exit 1
 fi
 
 # Sets defaults
-if [ ! -f "$DNS_TTL" ]; then
+if [ -z "$DNS_TTL" ]; then
   DNS_TTL=300 # 5 minutes
 fi
-if [ ! -f "$RECHECK_SECS" ]; then
+if [ -z "$RECHECK_SECS" ]; then
   RECHECK_SECS=900 # 15 minutes
 fi
 
@@ -31,7 +31,10 @@ aws configure set aws_secret_access_key $AWS_SECRET
 
 cd /app/aws-dyndns
 
+# We are hanging up on the first domain here because it's waiting for the script to finish,
+# which is never does.
 for i in $(echo $DOMAIN | tr " " "\n")
 do
   ./aws-dyndns $i $DNS_TTL $AWS_ZONE_ID $RECHECK_SECS
 done
+
