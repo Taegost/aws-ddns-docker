@@ -1,13 +1,13 @@
-version: "3"
-
 services: 
   aws-ddns: 
-    image: diceninjagaming/aws-ddns:latest
+    image: taegost/aws-ddns:latest
     restart: unless-stopped
     environment:
       AWS_ACCESS_KEY: AK6fakekey4EE
       AWS_SECRET: SuperDuperSecret
+      AWS_ZONE_ID: Z0000fakezone000
       DOMAIN: example.com
       DNS_TTL: 300
-      AWS_ZONE_ID: Z0000fakezone000
       RECHECK_SECS: 900
+      MAX_RETRIES: 10
+      RETRY_DELAY: 30
