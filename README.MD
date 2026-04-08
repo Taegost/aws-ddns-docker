@@ -14,7 +14,7 @@ If you are hosting multiple domains (or sub-domains), you can enter them all, le
 ---
 
 # Pre-Requisites
-- Get the [Zone ID]((http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/UsingWithIAM.html)) for the hosted domain from the Route 53 Hosted Zones console
+- Get the [Zone ID](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/UsingWithIAM.html) for the hosted domain from the Route 53 Hosted Zones console
 - Create a new user. **Make sure you record the Access Key ID and Access Key Secret**
 - Edit the new user and click ```Inline Policies``` 
 - Use the Visual Editor:
