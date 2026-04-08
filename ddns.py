@@ -20,7 +20,7 @@ from botocore.exceptions import BotoCoreError, ClientError
 # ---------------------------------------------------------------------------
 logging.basicConfig(
     stream=sys.stdout,
-    level=logging.INFO,
+    level=logging.INFO, # defaults to INFO in case there are any init issues
     format="%(asctime)s [%(levelname)s] %(message)s",
     datefmt="%Y-%m-%dT%H:%M:%S",
 )
@@ -43,6 +43,7 @@ def load_config() -> dict:
         "aws_secret":     os.environ["AWS_SECRET"],
         "zone_id":        os.environ["AWS_ZONE_ID"],
         "domains":        os.environ["DOMAIN"].split(),
+        "log_level":      os.environ.get("LOG_LEVEL", "INFO").upper(),
         "dns_ttl":        int(os.environ.get("DNS_TTL",      "300")),
         "recheck_secs":   int(os.environ.get("RECHECK_SECS", "900")),
         "max_retries":    int(os.environ.get("MAX_RETRIES",  "10")),
@@ -65,7 +66,7 @@ def get_public_ip(timeout: int = 5) -> str | None:
         resp.raise_for_status()
         return resp.text.strip()
     except requests.RequestException as exc:
-        log.warning("Could not retrieve public IP: %s", exc)
+        log.error("Could not retrieve public IP: %s", exc)
         return None
 
 def fetch_all_a_records(route53: object, zone_id: str) -> dict[str, str]:
@@ -81,7 +82,7 @@ def fetch_all_a_records(route53: object, zone_id: str) -> dict[str, str]:
                 if rrs["Type"] == "A" and rrs.get("ResourceRecords"):
                     records[rrs["Name"]] = rrs["ResourceRecords"][0]["Value"]
     except (BotoCoreError, ClientError) as exc:
-        log.warning("Could not fetch A records for zone %s: %s", zone_id, exc)
+        log.error("Could not fetch A records for zone %s: %s", zone_id, exc)
     return records
 
 def upsert_dns_record(
@@ -123,6 +124,10 @@ def upsert_dns_record(
 def main() -> None:
     cfg = load_config()
 
+    # Set requested log level and fallback to INFO if the user entered something invalid
+    log_level = getattr(logging, cfg["log_level"], logging.INFO) 
+    logging.getLogger().setLevel(log_level)
+
     route53 = boto3.client(
         "route53",
         aws_access_key_id=cfg["aws_access_key"],
@@ -153,7 +158,7 @@ def main() -> None:
         # Gets and validates public IP
         public_ip = get_public_ip()
         if not public_ip or not is_valid_ipv4(public_ip):
-            log.warning("Invalid or missing public IP: %r – skipping", public_ip)
+            log.error("Invalid or missing public IP: %r – skipping", public_ip)
             continue # This will skip the rest of the loop and sleeps until the next check
 
         dns_cache = fetch_all_a_records(route53, cfg["zone_id"]) # Gets all records from the Hosted Zone

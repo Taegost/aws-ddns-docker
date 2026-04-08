@@ -59,6 +59,7 @@ Any variable with a blank default is **REQUIRED**, the container will not start 
 | `AWS_SECRET`     |         | Secret key from AWS                                                        |
 | `AWS_ZONE_ID`    |         | Unique zone ID from Route 53 for the hosted domain                         |
 | `DOMAIN`         |         | Space-separated list of domains to keep updated                            |
+| `LOG_LEVEL`      | `INFO`  | Console logging level. Values are: DEBUG, INFO, WARNING, ERROR, CRITICAL   |
 | `DNS_TTL`        | `300`   | TTL value for the DNS record, in seconds                                   |
 | `RECHECK_SECS`   | `900`   | Number of seconds between checking for IP address updates                  |
 | `MAX_RETRIES`    | `10`    | Maximum number of times to retry the DNS update if an error is encountered |
