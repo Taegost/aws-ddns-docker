@@ -21,6 +21,7 @@ RUN chmod 755 ddns.py
 USER ddns
 
 # Simple liveness probe: process is running
-HEALTHCHECK --interval=60s --timeout=5s --start-period=10s --retries=3 \
-    CMD pgrep -f ddns.py || exit 1
+HEALTHCHECK --interval=60s --timeout=5s --start-period=30s --retries=3 \
+    CMD python -c "import time, sys; d=open('/tmp/heartbeat').read(); sys.exit(0 if time.time()-float(d) < ${RECHECK_SECS:-900}+60 else 1)"
+
 ENTRYPOINT ["python", "-u", "ddns.py"]
