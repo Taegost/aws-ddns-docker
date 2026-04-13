@@ -205,7 +205,10 @@ def main() -> None:
                         cfg["max_retries"],
                         domain,
                     )
-
+        
+        # Update heartbeat file for Docker healthcheck
+        with open("/tmp/heartbeat", "w") as f:
+            f.write(str(time.time()))
 
 if __name__ == "__main__":
     main()
