@@ -1,10 +1,9 @@
 # =============================================================================
-# DevOps Toolbox — Build and Publish Pipeline
+# Docker Image Build and Publish Pipeline
 # =============================================================================
-# Builds the DevOps Toolbox image and pushes it to Docker Hub.
+# Builds the Docker image as both amd64 and arm64 and pushes it to Docker Hub.
 #
 # TRIGGERS:
-#   - Push to main         → builds and pushes with 'latest' tag
 #   - Version tag (v*.*.*)  → builds and pushes with full semver tags
 #   - Pull request to main  → builds only (no push) to validate Dockerfile
 #   - Weekly schedule       → rebuilds to pick up base image security patches
@@ -12,9 +11,10 @@
 #
 # REQUIRED SECRETS (Settings → Secrets and variables → Actions):
 #   DOCKERHUB_USERNAME   — your Docker Hub username (org-level secret)
+#                          This is used as the org name for the image
 #   DOCKERHUB_TOKEN      — Docker Hub access token, NOT your password (org-level secret)
 #                          Generate at: hub.docker.com → Account Settings → Security
-#   DOCKERHUB_IMAGENAME  — full image path, e.g. yourusername/devops-toolbox (repo-level secret)
+#   DOCKERHUB_IMAGENAME  — Image name, without the org name, e.g. devops-toolbox (repo-level secret)
 #
 # TAGGING STRATEGY:
 #   Push to main:    latest, sha-<short-commit>
