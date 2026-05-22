@@ -15,7 +15,13 @@ If you are hosting multiple domains (or sub-domains), you can enter them all, le
 
 # Pre-Requisites
 - Get the [Zone ID](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/UsingWithIAM.html) for the hosted domain from the Route 53 Hosted Zones console
-- Create a new user. **Make sure you record the Access Key ID and Access Key Secret**
+- Create a new user
+  - In the new user, go to Security Credentials -> Access Keys
+  - Click `Create Access Key`
+  - Choose `Other` and click 'Next'
+  - Description Tag Value: `Used by AWS-DDNS container to update DNS records`
+  - **Make sure you record the Access Key ID and Access Key Secret**
+  - Click `Done`
 - Edit the new user and click ```Inline Policies``` 
 - Use the Visual Editor:
   - **Service**: Amazon Route 53
